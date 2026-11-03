@@ -39,42 +39,34 @@
     <div class="box">
         <div class="spinner"></div>
         <h2>Подключение к Volt...</h2>
-        <p style="color: #8e8e99; font-size: 13px; margin-top: 8px;">Связываемся с сервером...</p>
+        <p style="color: #8e8e99; font-size: 13px; margin-top: 8px;">Обходим проверку и открываем сервер...</p>
     </div>
 
     <script>
-        // Ссылка на файл url.txt в вашем репозитории
-        const TUNNEL_URL_FILE = "https://raw.githubusercontent.com/voltmsg/volt/main/url.txt";
+        // Использование фиксированного поддомена Localtunnel решает проблему с обновлением ссылки
+        // Пример запуска на ПК: lt --port 5000 --subdomain myvoltchat
+        const LOCAL_TUNNEL_URL = "https://volt.loca.lt";
 
-        async function connect() {
+        async function bypassAndRedirect() {
             try {
-                const res = await fetch(TUNNEL_URL_FILE + "?r=" + Math.random());
-                if (!res.ok) throw new Error();
-                const tunnelUrl = (await res.text()).trim();
-
-                if (tunnelUrl.startsWith('http')) {
-                    // Важный момент: запрашиваем туннель со специальным заголовком обхода IP
-                    const check = await fetch(tunnelUrl, {
-                        method: 'GET',
-                        mode: 'no-cors', 
-                        headers: {
-                            'Bypass-Tunnel-Reminder': 'true'
-                        }
-                    });
-
-                    // Перенаправляем пользователя на актуальный адрес
-                    window.location.replace(tunnelUrl);
-                    return;
-                }
+                // Делаем скрытый запрос с заголовком обхода IP перед редиректом
+                await fetch(LOCAL_TUNNEL_URL, {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    headers: {
+                        'Bypass-Tunnel-Reminder': 'true'
+                    }
+                });
             } catch (e) {
-                document.querySelector('p').innerText = "Ожидание запуска сервера...";
+                // Игнорируем сетевые ограничения CORS, нам важно лишь отправить заголовок
             }
+
+            // Мгновенный переход на сам туннель уже без экрана ввода IP
+            window.location.replace(LOCAL_TUNNEL_URL);
         }
 
-        connect();
-        setInterval(connect, 4000);
+        bypassAndRedirect();
     </script>
 </body>
 </html>
-
 
