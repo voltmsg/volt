@@ -39,13 +39,13 @@
 <body>
     <div class="box">
         <div class="spinner"></div>
-        <h2>Подключение к Volt...</h2>
-        <p style="color: #8e8e99; font-size: 13px; margin-top: 8px;">Получаем актуальный адрес сервера...</p>
+        <h2>Подключение к Volt</h2>
+        <p style="color: #8e8e99; font-size: 13px; margin-top: 8px;">Соединение с сервером...</p>
     </div>
 
     <script>
         // Ссылка на ваш файл с актуальным туннелем на GitHub
-        const URL_FILE = "https://raw.githubusercontent.com/ВАШ_НИК/ИМЯ_РЕПОЗИТОРИЯ/main/url.txt";
+        const URL_FILE = "https://raw.githubusercontent.com/voltmsg/volt/main/url.txt";
 
         async function connect() {
             try {
@@ -61,7 +61,7 @@
                     return;
                 }
             } catch (e) {
-                document.querySelector('p').innerText = "Ожидание публикации адреса сервера...";
+                document.querySelector('p').innerText = "Ожидание...";
             }
         }
 
