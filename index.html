@@ -2,8 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volt Messenger 11</title>
+    <title>Volt Messenger</title>
     <style>
         body {
             background: #0d0d12;
@@ -39,33 +40,33 @@
     <div class="box">
         <div class="spinner"></div>
         <h2>Подключение к Volt...</h2>
-        <p style="color: #8e8e99; font-size: 13px; margin-top: 8px;">Обходим проверку и открываем сервер...</p>
+        <p style="color: #8e8e99; font-size: 13px; margin-top: 8px;">Получаем актуальный адрес сервера...</p>
     </div>
 
     <script>
-        // Использование фиксированного поддомена Localtunnel решает проблему с обновлением ссылки
-        // Пример запуска на ПК: lt --port 5000 --subdomain myvoltchat
-        const LOCAL_TUNNEL_URL = "https://volt.loca.lt";
+        // Ссылка на ваш файл с актуальным туннелем на GitHub
+        const URL_FILE = "https://raw.githubusercontent.com/ВАШ_НИК/ИМЯ_РЕПОЗИТОРИЯ/main/url.txt";
 
-        async function bypassAndRedirect() {
+        async function connect() {
             try {
-                // Делаем скрытый запрос с заголовком обхода IP перед редиректом
-                await fetch(LOCAL_TUNNEL_URL, {
-                    method: 'GET',
-                    mode: 'no-cors',
-                    headers: {
-                        'Bypass-Tunnel-Reminder': 'true'
-                    }
-                });
-            } catch (e) {
-                // Игнорируем сетевые ограничения CORS, нам важно лишь отправить заголовок
-            }
+                const res = await fetch(URL_FILE + "?r=" + Math.random());
+                if (!res.ok) throw new Error();
+                const tunnelUrl = (await res.text()).trim();
 
-            // Мгновенный переход на сам туннель уже без экрана ввода IP
-            window.location.replace(LOCAL_TUNNEL_URL);
+                if (tunnelUrl.startsWith('http')) {
+                    document.querySelector('p').innerText = "Соединение установлено. Переход...";
+                    
+                    // Перенаправляем пользователя на актуальный адрес туннеля
+                    window.location.replace(tunnelUrl);
+                    return;
+                }
+            } catch (e) {
+                document.querySelector('p').innerText = "Ожидание публикации адреса сервера...";
+            }
         }
 
-        bypassAndRedirect();
+        connect();
+        setInterval(connect, 4000);
     </script>
 </body>
 </html>
